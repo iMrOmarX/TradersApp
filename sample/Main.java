@@ -9,16 +9,14 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import java.util.ArrayList;
-
 public class Main extends Application {
 
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("sample.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/sample.fxml"));
 
-        Parent root = loader.load();
+        Parent root =  loader.load();
 
         //Now we have access to getController() through the instance... don't forget the type cast
         Controller myController = (Controller)loader.getController();
