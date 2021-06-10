@@ -1,0 +1,9 @@
+.tab-pane {
+    selected-tab-color: blue ;
+}
+
+.tab:selected > .tab-container > .tab-close-button {
+    -fx-background-color: selected-tab-color ;
+}
+
+
