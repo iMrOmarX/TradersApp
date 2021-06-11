@@ -7,7 +7,7 @@ public class DatabaseConnecter {
     private String connectionURL = "jdbc:mysql://localhost:3306/traders" ;
     private String userName = "root";
     private String userPassword = "9yKZpv%PE3GH";
-
+    private Connection conn;
     private Statement stmt;
 
     public DatabaseConnecter() throws SQLException {
@@ -15,7 +15,7 @@ public class DatabaseConnecter {
     }
     public void connectToDatabase() throws SQLException {
         // Step 1: Construct a database 'Connection' object called 'conn'
-        Connection conn = DriverManager.getConnection( connectionURL,
+        conn = DriverManager.getConnection( connectionURL,
                 userName, userPassword);   // For MySQL only
         stmt = conn.createStatement();
     }
@@ -82,4 +82,27 @@ public class DatabaseConnecter {
         stmt.execute(strInsert);
     }
 
+    public int getNumberOfItems() throws SQLException{
+        String strCount = "SELECT COUNT(id) AS NumberOfItems FROM item";
+
+        ResultSet rset = stmt.executeQuery(strCount);
+
+        while(rset.next()) {
+            return rset.getInt(1);
+        }
+        return  0;
+    }
+
+    public void saveNewItem(Item newItem) throws SQLException{
+        String strInsert = "INSERT INTO item(id ,name , price , notes,trader_id) VALUES (?, ? , ? ,?,?)";
+
+        PreparedStatement preparedStmt = conn.prepareStatement(strInsert);
+        preparedStmt.setInt(1, newItem.getId());
+        preparedStmt.setString(2 , newItem.getName());
+        preparedStmt.setFloat(3,newItem.getPrice());
+        preparedStmt.setString(4, newItem.getNotes());
+        preparedStmt.setInt(5,newItem.getTraderID());
+
+        preparedStmt.execute();
+    }
 }

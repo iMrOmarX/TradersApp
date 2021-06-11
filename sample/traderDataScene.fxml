@@ -54,7 +54,7 @@ fx:controller="sample.TraderDataPanelController">
                   <TextField fx:id="AddProductPriceTextField" layoutX="330.0" layoutY="171.0" prefHeight="26.0" prefWidth="106.0" />
                   <Label layoutX="476.0" layoutY="226.0" text="ملاحظات عن المنتج" />
                   <TextArea fx:id="AddProductNotesTextField" layoutX="118.0" layoutY="226.0" prefHeight="110.0" prefWidth="318.0" />
-                  <Button fx:id="AddProductButton" layoutX="207.0" layoutY="380.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="271.0" text="إضافة المنتج" />
+                  <Button fx:id="AddProductButton" layoutX="207.0" layoutY="380.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="271.0" text="إضافة المنتج" onAction="#addNewItem"/>
                </children>
             </AnchorPane>
         </content>

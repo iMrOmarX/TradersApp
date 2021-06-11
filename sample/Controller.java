@@ -48,7 +48,10 @@ public class Controller  implements Initializable {
     private DatabaseConnecter db;
 
 
+
     private TraderDataPanelController traderDataController;
+
+
 
     @Override
     public void initialize(URL url , ResourceBundle rb) {
@@ -92,6 +95,7 @@ public class Controller  implements Initializable {
                         traderDataController =  fxmlLoader.<TraderDataPanelController>getController();
 
                         traderDataController.setCurrentTrader(currentWantedTraders.get(currentItemSelected));
+                        traderDataController.setDatabase(db);
 
                         stage.setTitle("Trader Info");
                         stage.setScene(new Scene(root1));
