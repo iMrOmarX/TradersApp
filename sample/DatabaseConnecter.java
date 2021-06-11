@@ -63,7 +63,7 @@ public class DatabaseConnecter {
             String notes = rset.getString("notes");
 
 
-            traders.add(new Trader(id ,phoneNumber , name ,address ,notes)) ;
+            traders.add(new Trader(id ,phoneNumber , name ,notes ,address)) ;
         }
 
         return traders;

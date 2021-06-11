@@ -2,8 +2,14 @@ package sample;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -39,18 +45,20 @@ public class Controller  implements Initializable {
     public Button addNewTraderButton;
 
     private Logger log = new Logger() ;
-
     private DatabaseConnecter db;
-    public Controller() {
 
-    }
+
+    private TraderDataPanelController traderDataController;
 
     @Override
     public void initialize(URL url , ResourceBundle rb) {
-        traders = new ArrayList<>();
+
+
         try {
 
             db = new DatabaseConnecter();
+            traders = db.getTradersByName("");
+            currentWantedTraders = traders;
             tradersNames = db.getTradersNames();
         } catch (SQLException e)  {
             System.out.println(e.getCause());
@@ -64,9 +72,39 @@ public class Controller  implements Initializable {
             throwables.printStackTrace();
         }
 
+        tradersListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
+            @Override
+            public void handle(MouseEvent click) {
+
+                if (click.getClickCount() == 2) {
+                    //Use ListView's getSelected Item
+                    int currentItemSelected = tradersListView.getSelectionModel()
+                            .getSelectedIndex();
+                    //use this to do whatever you want to. Open Link etc.
+                    System.out.println(currentItemSelected);
+                    System.out.println(currentWantedTraders.size());
+                    try {
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/sample/traderDataScene.fxml"));
+                        Parent root1 = (Parent) fxmlLoader.load();
+                        Stage stage = new Stage();
+
+                        traderDataController =  fxmlLoader.<TraderDataPanelController>getController();
+
+                        traderDataController.setCurrentTrader(currentWantedTraders.get(currentItemSelected));
+
+                        stage.setTitle("Trader Info");
+                        stage.setScene(new Scene(root1));
+
+
+                        stage.show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
-
 
 
 
@@ -123,12 +161,14 @@ public class Controller  implements Initializable {
 
             Trader newTrader = new Trader( Integer.parseInt(TraderIdTextField.getText()) , TraderPhoneNumberTextField.getText(), TraderNameTextField.getText() ,  TraderAddressTextField.getText()  , TraderNotesTextArea.getText());
             traders.add(newTrader);
+            currentWantedTraders.add(newTrader);
             //tradersNames.add(TraderNameTextField.getText());
 
 
             db.saveNewTrader(newTrader);
-            resetAddTraderFields();
             tradersNames = db.getTradersNames();
+            resetAddTraderFields();
+
             showTradersOnList();
             showConfirmationAlert();
 

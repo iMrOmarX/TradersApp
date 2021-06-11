@@ -24,6 +24,7 @@ public class Main extends Application {
         primaryStage.setTitle("Trader App");
         primaryStage.setScene(new Scene(root, 800, 800));
         primaryStage.show();
+
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent t) {

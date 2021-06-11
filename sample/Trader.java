@@ -5,8 +5,8 @@ import java.util.Objects;
 
 public class Trader {
     private int id ;
-    private String phoneNumber;
-    private String name , notes , address ;
+    private String phoneNumber = "";
+    private String name = "" , notes = "" , address = "" ;
 
     private ArrayList<Item> sellableItems;
 
