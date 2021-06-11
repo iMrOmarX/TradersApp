@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Trader {
-    private int id , phoneNumber;
+    private int id ;
+    private String phoneNumber;
     private String name , notes , address ;
 
     private ArrayList<Item> sellableItems;
 
-    public Trader(int id, int phoneNumber, String name, String notes, String address) {
+    public Trader(int id, String phoneNumber, String name, String notes, String address) {
         this.id = id;
         this.phoneNumber = phoneNumber;
         this.name = name;
@@ -25,11 +26,11 @@ public class Trader {
         this.id = id;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

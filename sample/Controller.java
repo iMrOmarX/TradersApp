@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -13,7 +14,7 @@ public class Controller  implements Initializable {
 
     private ArrayList<Trader> traders;
     private ArrayList<String> tradersNames;
-
+    private ArrayList<Trader> currentWantedTraders;
 
 
     public TextField TraderIdTextField;
@@ -39,6 +40,7 @@ public class Controller  implements Initializable {
 
     private Logger log = new Logger() ;
 
+    private DatabaseConnecter db;
     public Controller() {
 
     }
@@ -46,30 +48,28 @@ public class Controller  implements Initializable {
     @Override
     public void initialize(URL url , ResourceBundle rb) {
         traders = new ArrayList<>();
-
         try {
-            tradersNames = (ArrayList<String>) log.readData(ArrayList.class , "names.json");
 
-        } catch (Exception e) {
-            tradersNames = new ArrayList<>();
+            db = new DatabaseConnecter();
+            tradersNames = db.getTradersNames();
+        } catch (SQLException e)  {
+            System.out.println(e.getCause());
         }
+
         TraderIdTextField.setText((tradersNames.size() + 1) + "");
-        showTradersOnList();
 
-    }
-
-
-
-    public void saveNewTrader(Trader newTrader) {
         try {
-            log.writeData(tradersNames , "names.json");
-            log.writeData(newTrader,  newTrader.getId() + ".json");
-
-            System.out.println("Success Saving");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+            showTradersOnList();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
+
+
     }
+
+
+
+
     public void saveData() {
         try {
             log.writeData(tradersNames , "names.json");
@@ -121,19 +121,19 @@ public class Controller  implements Initializable {
                 }
             }
 
-            Trader newTrader = new Trader( Integer.parseInt(TraderIdTextField.getText()) , Integer.parseInt(TraderPhoneNumberTextField.getText()), TraderNameTextField.getText() ,  TraderAddressTextField.getText()  , TraderNotesTextArea.getText());
+            Trader newTrader = new Trader( Integer.parseInt(TraderIdTextField.getText()) , TraderPhoneNumberTextField.getText(), TraderNameTextField.getText() ,  TraderAddressTextField.getText()  , TraderNotesTextArea.getText());
             traders.add(newTrader);
-            tradersNames.add(TraderNameTextField.getText());
+            //tradersNames.add(TraderNameTextField.getText());
 
 
-            saveNewTrader(newTrader);
+            db.saveNewTrader(newTrader);
             resetAddTraderFields();
-
+            tradersNames = db.getTradersNames();
             showTradersOnList();
             showConfirmationAlert();
 
         } catch (Exception e) {
-            // Update
+            // update
             System.out.println(e.getMessage());
             showErrorAlert();
         }
@@ -141,45 +141,52 @@ public class Controller  implements Initializable {
     }
 
 
-    public void searchForTraderByName(ObservableList<String> tradersNamesList) {
-        int i = 1 ;
-        for(String name: tradersNames) {
-            if(name.contains(searchForTraderByNameTextField.getText())) {
-                tradersNamesList.add(i +"  " + name);
 
-            }
-            i++;
-        }
-    }
     public void searchForTrader() {
         ObservableList<String> tradersNamesList =  FXCollections.observableArrayList();
 
+        currentWantedTraders = new ArrayList<>();
+
         if(!searchForTraderByNameTextField.getText().isBlank()){
-            searchForTraderByName(tradersNamesList);
+            try {
+                currentWantedTraders = db.getTradersByName(searchForTraderByNameTextField.getText());
+
+            } catch (SQLException throwables) {
+                throwables.printStackTrace(); // update
+            }
         }
         else if (!searchForTraderByIdTextField.getText().isBlank()){
             try {
-                if(Integer.parseInt(searchForTraderByIdTextField.getText()) > tradersNames.size()){
-
-                }
-                else {
-                    tradersNamesList.add(searchForTraderByIdTextField.getText() + "  "  +tradersNames.get(Integer.parseInt(searchForTraderByIdTextField.getText()) - 1));
-                }
+                Trader wantedTrader = db.getTraderById(Integer.parseInt(searchForTraderByIdTextField.getText()));
+                if(wantedTrader != null)
+                currentWantedTraders.add(wantedTrader);
 
             } catch (Exception e) {
-                searchForTraderByName(tradersNamesList);
+                e.printStackTrace(); // update
             }
         }
         else {
-            showTradersOnList();
+
+            try {
+                showTradersOnList();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
             return ;
         }
+        if(!currentWantedTraders.isEmpty()) {
+            for(Trader s : currentWantedTraders) {
+                tradersNamesList.add(s.getId() + "  "  + s.getName());
+            }
+        }
+
         tradersListView.setItems(tradersNamesList);
     }
 
-    public void showTradersOnList() {
+    public void showTradersOnList() throws SQLException {
         ArrayList<String> tradersNamesWithId = new ArrayList<>();
         int i = 1 ;
+
         for(String name : tradersNames) {
             tradersNamesWithId.add(i + "  " + name);
             i++;
