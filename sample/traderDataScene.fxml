@@ -36,7 +36,7 @@
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="538.0" prefWidth="626.0">
                <children>
                   <Button fx:id="SearchForProductButton" layoutX="107.0" layoutY="45.0" mnemonicParsing="false" onAction="#serachForItemByNameAndUpdate" text="البحث" />
-                  <TextField layoutX="198.0" layoutY="45.0" fx:id="SearchForItemByNameTextField"  onAction="#serachForItemByNameAndUpdate" prefHeight="26.0" prefWidth="192.0" />
+                  <TextField fx:id="SearchForItemByNameTextField" layoutX="198.0" layoutY="45.0" onAction="#serachForItemByNameAndUpdate" prefHeight="26.0" prefWidth="192.0" />
                   <Label layoutX="420.0" layoutY="49.0" text="البحث عن طريق اسم المنتج" />
                   <TableView fx:id="ItemsTable" layoutX="77.0" layoutY="113.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="465.0" prefWidth="646.0">
                     <columns>

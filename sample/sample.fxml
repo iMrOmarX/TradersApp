@@ -3,16 +3,20 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.VBox?>
 
-<FlowPane prefHeight="598.0" prefWidth="934.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<FlowPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <children>
-      <TabPane nodeOrientation="LEFT_TO_RIGHT" prefHeight="597.0" prefWidth="934.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane nodeOrientation="LEFT_TO_RIGHT" prefHeight="806.0" prefWidth="1366.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
             <Tab text="قائمة التجار">
               <content>
@@ -41,12 +45,38 @@
                         <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="522.0" layoutY="224.0" prefHeight="18.0" prefWidth="114.0" text="العنوان" textAlignment="CENTER" />
                         <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="522.0" layoutY="277.0" prefHeight="18.0" prefWidth="114.0" text="ملاحظات عن المورد" textAlignment="CENTER" />
                         <TextArea id="TraderNotesTextArea" fx:id="TraderNotesTextArea" layoutX="229.0" layoutY="277.0" prefHeight="68.0" prefWidth="214.0" />
-                        <Button id="addNewTraderButton" fx:id="addNewTraderButton" layoutX="314.0" layoutY="449.0" mnemonicParsing="false" onAction="#addNewTrader" prefHeight="52.0" prefWidth="239.0" text="إضافة تاجر جديد" />
+                        <Button id="addNewTraderButton" fx:id="addNewTraderButton" layoutX="312.0" layoutY="418.0" mnemonicParsing="false" onAction="#addNewTrader" prefHeight="52.0" prefWidth="239.0" text="إضافة تاجر جديد" />
                      </children>
                   </AnchorPane>
               </content>
             </Tab>
             <Tab text="شراء">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="778.0" prefWidth="1336.0">
+                     <children>
+                        <TableView fx:id="ItemsTable" layoutX="554.0" layoutY="150.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="370.0" prefWidth="705.0">
+                           <columns>
+                              <TableColumn fx:id="ItemIdColumn" editable="false" prefWidth="120.80004727840424" text="الرقم التسلسلي للمنتج" />
+                              <TableColumn fx:id="ItemNameColumn" prefWidth="226.40003204345703" text="اسم المنتج" />
+                              <TableColumn fx:id="ItemPriceColumn" prefWidth="78.4000244140625" text="السعر" />
+                              <TableColumn fx:id="ItemTraderName" prefWidth="127.19998168945312" text="المورد" />
+                              <TableColumn fx:id="ItemNotesColumn" prefWidth="152.00002441406252" text="ملاحظات" />
+                           </columns>
+                        </TableView>
+                        <Button fx:id="SearchForProductButton" layoutX="644.0" layoutY="101.0" mnemonicParsing="false" onAction="#serachForItemByNameAndUpdate" prefHeight="38.0" prefWidth="91.0" text="البحث" />
+                        <TextField fx:id="SearchForItemByNameTextField" layoutX="642.0" layoutY="56.0" onAction="#serachForItemByNameAndUpdate" prefHeight="34.0" prefWidth="410.0" />
+                        <Label layoutX="1093.0" layoutY="64.0" prefHeight="6.0" prefWidth="141.0" text="البحث عن طريق اسم المنتج" />
+                        <ScrollPane layoutX="56.0" layoutY="64.0" prefHeight="426.0" prefWidth="462.0">
+                           <content>
+                              <VBox fx:id="WantToBuyItemsScrollPane" />
+                           </content>
+                        </ScrollPane>
+                        <TextField fx:id="SearchForItemByIdTextField" layoutX="920.0" layoutY="103.0" onAction="#serachForItemByNameAndUpdate" prefHeight="34.0" prefWidth="132.0" />
+                        <Label layoutX="1093.0" layoutY="111.0" prefHeight="6.0" prefWidth="141.0" text="البحث عن طريق اسم المنتج" />
+                     </children></AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Untitled Tab">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
               </content>

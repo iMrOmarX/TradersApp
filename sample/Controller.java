@@ -5,12 +5,16 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -51,7 +55,22 @@ public class Controller  implements Initializable {
 
     private TraderDataPanelController traderDataController;
 
+    public VBox WantToBuyItemsScrollPane;
 
+    public ScrollPane ItemsScrollPane;
+    public TextField SearchForItemByNameTextField;
+    public TextField SearchForItemByIdTextField;
+
+    public TableView<Item> ItemsTable ;
+
+    public TableColumn ItemIdColumn;
+    public TableColumn ItemNameColumn;
+    public TableColumn ItemPriceColumn;
+    public TableColumn ItemNotesColumn;
+    public TableColumn ItemTraderName;
+
+
+    public BoughtItemDescriptionPane[] boughtItemsPanes ;
 
     @Override
     public void initialize(URL url , ResourceBundle rb) {
@@ -75,6 +94,8 @@ public class Controller  implements Initializable {
             throwables.printStackTrace();
         }
 
+
+        setupTable();
         tradersListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
             @Override
@@ -102,11 +123,24 @@ public class Controller  implements Initializable {
 
 
                         stage.show();
+
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             }
+        });
+
+        ItemsTable.setRowFactory( tv -> {
+            TableRow<Item> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                    Item rowData = row.getItem();
+                    addNewItemPane(rowData);
+                }
+            });
+            return row ;
         });
     }
 
@@ -157,7 +191,7 @@ public class Controller  implements Initializable {
     public void addNewTrader() {
         try {
             TextField nesscaryTextFields[] = {TraderIdTextField, TraderNameTextField, TraderPhoneNumberTextField};
-             for(TextField field : nesscaryTextFields) {
+            for(TextField field : nesscaryTextFields) {
                 if(field.getText().isBlank()) {
                     throw new IncompleteInputData();
                 }
@@ -184,6 +218,15 @@ public class Controller  implements Initializable {
 
     }
 
+    public void setupTable() {
+        ItemIdColumn.setCellValueFactory(new PropertyValueFactory<Item, Integer >("id"));
+        ItemNameColumn.setCellValueFactory(new PropertyValueFactory<Item, String >("name"));
+        ItemPriceColumn.setCellValueFactory(new PropertyValueFactory<Item, Float >("price"));
+        ItemNotesColumn.setCellValueFactory(new PropertyValueFactory<Item, String >("notes"));
+        ItemTraderName.setCellValueFactory(new PropertyValueFactory<Item , String>("traderName"));
+
+
+    }
 
 
     public void searchForTrader() {
@@ -203,7 +246,7 @@ public class Controller  implements Initializable {
             try {
                 Trader wantedTrader = db.getTraderById(Integer.parseInt(searchForTraderByIdTextField.getText()));
                 if(wantedTrader != null)
-                currentWantedTraders.add(wantedTrader);
+                    currentWantedTraders.add(wantedTrader);
 
             } catch (Exception e) {
                 e.printStackTrace(); // update
@@ -238,6 +281,35 @@ public class Controller  implements Initializable {
         ObservableList<String> tradersNamesList =  FXCollections.observableArrayList(tradersNamesWithId);
 
         tradersListView.setItems(tradersNamesList);
+
+    }
+
+    public void addNewItemPane(Item addedItem) {
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/BoughtItemDescriptionPane.fxml"));
+
+        BoughtItemDescriptionPane itemController = new BoughtItemDescriptionPane(addedItem);
+
+        loader.setController(itemController);
+
+        System.out.println("Adding item pane");
+        try {
+            Node newItemNode = loader.load();
+            this.WantToBuyItemsScrollPane.getChildren().add(newItemNode);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public void serachForItemByNameAndUpdate() throws SQLException {
+        String searchedItem = SearchForItemByNameTextField.getText();
+
+        ArrayList<Item> items = db.getItems( SearchForItemByNameTextField.getText() );
+
+        ItemsTable.setItems(FXCollections.observableArrayList(items));
 
     }
 

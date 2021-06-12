@@ -4,6 +4,12 @@ public class Item {
     private int id = 0 , traderID = 0;
     private float price  = 0 ;
     private String name= "" , notes= "";
+    private String traderName;
+
+    public String getTraderName() {
+        return traderName;
+    }
+
 
     public Item(int id, float price, int traderID, String name, String notes) {
         this.id = id;
@@ -51,5 +57,9 @@ public class Item {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public void setTraderName(String trader_name) {
+        this.traderName = trader_name;
     }
 }

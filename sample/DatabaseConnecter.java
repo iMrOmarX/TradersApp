@@ -132,7 +132,6 @@ public class DatabaseConnecter {
         String strSelect ="SELECT * FROM item WHERE trader_id = " + trader.getId() +
                 ((itemName.isBlank())? "" : " AND name LIKE " +  "'%" + itemName + "%'");
 
-        System.out.println(strSelect);
         ResultSet rset = stmt.executeQuery(strSelect);
 
         ArrayList<Item> items = new ArrayList<>();
@@ -149,4 +148,40 @@ public class DatabaseConnecter {
 
         return items;
     }
+
+    public ArrayList<Item> getItems (String itemName ) throws SQLException{
+
+        //String strSelect ="SELECT id(item) , name(item), price(item) , notes(item) , name(traders) FROM item  "+
+         //       ((itemName.isBlank())? "" : "WHERE name LIKE " +  "'%" + itemName + "%'");
+
+
+        String strSelect = "select item.* , traders.name as trader_name from item INNER JOIN traders on item.trader_id = traders.id " +
+                ((itemName.isBlank())? "" : "WHERE item.name LIKE " +  "'%" + itemName + "%'");
+
+        ResultSet rset = stmt.executeQuery(strSelect);
+
+        ArrayList<Item> items = new ArrayList<>();
+
+
+        ArrayList<String> traders_names = new ArrayList<>();
+
+        while(rset.next()) {
+            int id = rset.getInt("id");
+            float price = rset.getFloat("price");
+            String name = rset.getString("name");
+            String notes = rset.getString("notes");
+
+            int trader_id = rset.getInt("trader_id");
+
+
+            Item newItem = new Item(id,  price , trader_id , name , notes) ;
+            String trader_name = rset.getString("trader_name");
+
+            newItem.setTraderName(trader_name);
+            items.add(newItem);
+
+        }
+        return items;
+    }
+
 }

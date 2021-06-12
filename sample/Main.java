@@ -22,7 +22,7 @@ public class Main extends Application {
         Controller myController = (Controller)loader.getController();
 
         primaryStage.setTitle("Trader App");
-        primaryStage.setScene(new Scene(root, 800, 800));
+        primaryStage.setScene(new Scene(root, 1280, 720));
         primaryStage.show();
 
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
