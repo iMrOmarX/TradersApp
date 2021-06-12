@@ -1,14 +1,15 @@
 package sample;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class TraderDataPanelController implements Initializable {
@@ -35,10 +36,16 @@ public class TraderDataPanelController implements Initializable {
 
     private DatabaseConnecter db;
 
-    public TraderDataPanelController () {
 
-    }
 
+    public TextField SearchForItemByNameTextField;
+    public TableView<Item> ItemsTable ;
+
+
+    public TableColumn ItemIdColumn;
+    public TableColumn ItemNameColumn;
+    public TableColumn ItemPriceColumn;
+    public TableColumn ItemNotesColumn;
 
     public void setCurrentTrader(Trader currentTrader) {
         this.currentTrader = currentTrader;
@@ -46,6 +53,13 @@ public class TraderDataPanelController implements Initializable {
 
     public void setDatabase(DatabaseConnecter db) {
         this.db =db;
+    }
+
+    public void updateItemsTable() throws SQLException{
+        ArrayList<Item> items = db.getItemsOfTrader(currentTrader);
+
+        ItemsTable.setItems(FXCollections.observableArrayList(items));
+
     }
 
     public void initializeTextFields() {
@@ -58,6 +72,22 @@ public class TraderDataPanelController implements Initializable {
     }
 
 
+    public void serachForItemByNameAndUpdate() throws SQLException {
+        String searchedItem = SearchForItemByNameTextField.getText();
+        ArrayList<Item> items = db.getItemsOfTrader(currentTrader, searchedItem);
+
+        ItemsTable.setItems(FXCollections.observableArrayList(items));
+    }
+
+    public void setupTable() {
+        ItemIdColumn.setCellValueFactory(new PropertyValueFactory<Item, Integer >("id"));
+        ItemNameColumn.setCellValueFactory(new PropertyValueFactory<Item, String >("name"));
+        ItemPriceColumn.setCellValueFactory(new PropertyValueFactory<Item, Float >("price"));
+        ItemNotesColumn.setCellValueFactory(new PropertyValueFactory<Item, String >("notes"));
+
+
+
+    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Platform.runLater(() -> {
@@ -65,6 +95,8 @@ public class TraderDataPanelController implements Initializable {
 
             try {
                 AddProductIdTextField.setText(db.getNumberOfItems()+ 1 + "");
+                setupTable();
+                updateItemsTable();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -86,6 +118,8 @@ public class TraderDataPanelController implements Initializable {
         }
 
     }
+
+
     public void addNewItem(ActionEvent actionEvent) {
         try {
             int id = Integer.parseInt(AddProductIdTextField.getText());
@@ -96,6 +130,7 @@ public class TraderDataPanelController implements Initializable {
 
             db.saveNewItem(new Item(id,price,traderId,name , notes));
             resetItemsFields();
+            updateItemsTable();
         } catch (Exception e) {
             e.printStackTrace();
         }

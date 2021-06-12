@@ -105,4 +105,48 @@ public class DatabaseConnecter {
 
         preparedStmt.execute();
     }
+
+    public ArrayList<Item> getItemsOfTrader(Trader trader ) throws SQLException{
+
+        String strSelect ="SELECT * FROM item WHERE trader_id = " + trader.getId();
+
+        ResultSet rset = stmt.executeQuery(strSelect);
+
+        ArrayList<Item> items = new ArrayList<>();
+
+        int trader_id = trader.getId();
+        while(rset.next()) {
+            int id = rset.getInt("id");
+            float price = rset.getFloat("price");
+            String name = rset.getString("name");
+            String notes = rset.getString("notes");
+
+            items.add(new Item(id,  price , trader_id , name , notes));
+        }
+
+        return items;
+    }
+
+    public ArrayList<Item> getItemsOfTrader(Trader trader , String itemName) throws SQLException{
+
+        String strSelect ="SELECT * FROM item WHERE trader_id = " + trader.getId() +
+                ((itemName.isBlank())? "" : " AND name LIKE " +  "'%" + itemName + "%'");
+
+        System.out.println(strSelect);
+        ResultSet rset = stmt.executeQuery(strSelect);
+
+        ArrayList<Item> items = new ArrayList<>();
+
+        int trader_id = trader.getId();
+        while(rset.next()) {
+            int id = rset.getInt("id");
+            float price = rset.getFloat("price");
+            String name = rset.getString("name");
+            String notes = rset.getString("notes");
+
+            items.add(new Item(id,  price , trader_id , name , notes));
+        }
+
+        return items;
+    }
 }

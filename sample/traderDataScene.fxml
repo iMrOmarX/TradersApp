@@ -2,15 +2,15 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="584.0" prefWidth="690.0" tabClosingPolicy="UNAVAILABLE" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/16"
-fx:controller="sample.TraderDataPanelController">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="689.0" prefWidth="799.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.TraderDataPanelController">
   <tabs>
     <Tab text="بيانات المورد">
       <content>
@@ -35,10 +35,17 @@ fx:controller="sample.TraderDataPanelController">
       <content>
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="538.0" prefWidth="626.0">
                <children>
-                  <ListView fx:id="ProductsListView" layoutX="93.0" layoutY="101.0" prefHeight="342.0" prefWidth="466.0" />
-                  <Button fx:id="SearchForProductButton" layoutX="107.0" layoutY="45.0" mnemonicParsing="false" text="البحث" />
-                  <TextField fx:id="SearchForProductByNameTextField" layoutX="198.0" layoutY="45.0" prefHeight="26.0" prefWidth="192.0" />
+                  <Button fx:id="SearchForProductButton" layoutX="107.0" layoutY="45.0" mnemonicParsing="false" onAction="#serachForItemByNameAndUpdate" text="البحث" />
+                  <TextField layoutX="198.0" layoutY="45.0" fx:id="SearchForItemByNameTextField"  onAction="#serachForItemByNameAndUpdate" prefHeight="26.0" prefWidth="192.0" />
                   <Label layoutX="420.0" layoutY="49.0" text="البحث عن طريق اسم المنتج" />
+                  <TableView fx:id="ItemsTable" layoutX="77.0" layoutY="113.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="465.0" prefWidth="646.0">
+                    <columns>
+                      <TableColumn fx:id="ItemIdColumn" editable="false" prefWidth="134.40003049373627" text="الرقم التسلسلي للمنتج" />
+                      <TableColumn fx:id="ItemNameColumn" prefWidth="209.60003662109375" text="اسم المنتج" />
+                        <TableColumn fx:id="ItemPriceColumn" prefWidth="79.20001220703125" text="السعر" />
+                        <TableColumn fx:id="ItemNotesColumn" prefWidth="224.00003051757812" text="ملاحظات" />
+                    </columns>
+                  </TableView>
                </children></AnchorPane>
       </content>
     </Tab>
@@ -54,7 +61,7 @@ fx:controller="sample.TraderDataPanelController">
                   <TextField fx:id="AddProductPriceTextField" layoutX="330.0" layoutY="171.0" prefHeight="26.0" prefWidth="106.0" />
                   <Label layoutX="476.0" layoutY="226.0" text="ملاحظات عن المنتج" />
                   <TextArea fx:id="AddProductNotesTextField" layoutX="118.0" layoutY="226.0" prefHeight="110.0" prefWidth="318.0" />
-                  <Button fx:id="AddProductButton" layoutX="207.0" layoutY="380.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="271.0" text="إضافة المنتج" onAction="#addNewItem"/>
+                  <Button fx:id="AddProductButton" layoutX="207.0" layoutY="380.0" mnemonicParsing="false" onAction="#addNewItem" prefHeight="34.0" prefWidth="271.0" text="إضافة المنتج" />
                </children>
             </AnchorPane>
         </content>
