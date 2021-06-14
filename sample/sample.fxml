@@ -54,7 +54,7 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="778.0" prefWidth="1336.0">
                      <children>
-                        <TableView fx:id="ItemsTable" layoutX="554.0" layoutY="150.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="370.0" prefWidth="705.0">
+                        <TableView fx:id="ItemsTable" layoutX="554.0" layoutY="169.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="370.0" prefWidth="705.0">
                            <columns>
                               <TableColumn fx:id="ItemIdColumn" editable="false" prefWidth="120.80004727840424" text="الرقم التسلسلي للمنتج" />
                               <TableColumn fx:id="ItemNameColumn" prefWidth="226.40003204345703" text="اسم المنتج" />
@@ -71,14 +71,9 @@
                               <VBox fx:id="WantToBuyItemsScrollPane" />
                            </content>
                         </ScrollPane>
-                        <TextField fx:id="SearchForItemByIdTextField" layoutX="920.0" layoutY="103.0" onAction="#serachForItemByNameAndUpdate" prefHeight="34.0" prefWidth="132.0" />
-                        <Label layoutX="1093.0" layoutY="111.0" prefHeight="6.0" prefWidth="141.0" text="البحث عن طريق اسم المنتج" />
+                        <TextField fx:id="SearchForItemByIdTextField" layoutX="885.0" layoutY="103.0" onAction="#serachForItemByNameAndUpdate" prefHeight="34.0" prefWidth="132.0" />
+                        <Label layoutX="1039.0" layoutY="110.0" prefHeight="19.0" prefWidth="196.0" text="البحث عن طريق الرقم التسلسلي للمنتج" />
                      </children></AnchorPane>
-              </content>
-            </Tab>
-            <Tab text="Untitled Tab">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
               </content>
             </Tab>
         </tabs>

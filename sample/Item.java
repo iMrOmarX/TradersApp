@@ -5,6 +5,7 @@ public class Item {
     private float price  = 0 ;
     private String name= "" , notes= "";
     private String traderName;
+    private int qty ;
 
     public String getTraderName() {
         return traderName;
@@ -61,5 +62,13 @@ public class Item {
 
     public void setTraderName(String trader_name) {
         this.traderName = trader_name;
+    }
+
+    public int getQty() {
+        return qty;
+    }
+
+    public void setQty(int qty) {
+        this.qty = qty;
     }
 }

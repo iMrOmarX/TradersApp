@@ -69,8 +69,10 @@ public class Controller  implements Initializable {
     public TableColumn ItemNotesColumn;
     public TableColumn ItemTraderName;
 
+    public ArrayList<Item> boughtItems;
+    public ArrayList<BoughtItemDescriptionPane> boughtItemsPanes;
+    private ArrayList<Node> itemsNodes;
 
-    public BoughtItemDescriptionPane[] boughtItemsPanes ;
 
     @Override
     public void initialize(URL url , ResourceBundle rb) {
@@ -90,14 +92,17 @@ public class Controller  implements Initializable {
 
         try {
             showTradersOnList();
+            setupTable();
+            serachForItemByNameAndUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
 
 
-        setupTable();
+        boughtItemsPanes = new ArrayList<>();
+        boughtItems = new ArrayList<>();
+        itemsNodes = new ArrayList<>();
         tradersListView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
             @Override
             public void handle(MouseEvent click) {
 
@@ -106,14 +111,14 @@ public class Controller  implements Initializable {
                     int currentItemSelected = tradersListView.getSelectionModel()
                             .getSelectedIndex();
                     //use this to do whatever you want to. Open Link etc.
-                    System.out.println(currentItemSelected);
-                    System.out.println(currentWantedTraders.size());
+
                     try {
                         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/sample/traderDataScene.fxml"));
                         Parent root1 = (Parent) fxmlLoader.load();
                         Stage stage = new Stage();
 
                         traderDataController =  fxmlLoader.<TraderDataPanelController>getController();
+
 
                         traderDataController.setCurrentTrader(currentWantedTraders.get(currentItemSelected));
                         traderDataController.setDatabase(db);
@@ -136,8 +141,13 @@ public class Controller  implements Initializable {
             TableRow<Item> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-                    Item rowData = row.getItem();
-                    addNewItemPane(rowData);
+                    Item currnetBoughtItem = row.getItem();
+                    if(!boughtItems.contains(currnetBoughtItem)) {
+                        addNewItemPane(currnetBoughtItem);
+                        boughtItems.add(currnetBoughtItem);
+                    }
+
+
                 }
             });
             return row ;
@@ -288,14 +298,16 @@ public class Controller  implements Initializable {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample/BoughtItemDescriptionPane.fxml"));
 
-        BoughtItemDescriptionPane itemController = new BoughtItemDescriptionPane(addedItem);
+        BoughtItemDescriptionPane itemController = new BoughtItemDescriptionPane(addedItem , this);
 
         loader.setController(itemController);
 
         System.out.println("Adding item pane");
         try {
             Node newItemNode = loader.load();
+            itemsNodes.add(newItemNode);
             this.WantToBuyItemsScrollPane.getChildren().add(newItemNode);
+            boughtItemsPanes.add(itemController);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -313,4 +325,19 @@ public class Controller  implements Initializable {
 
     }
 
+    public void removeItem(BoughtItemDescriptionPane boughtItemDescriptionPane) {
+        int i = 0 ;
+        for (BoughtItemDescriptionPane s : boughtItemsPanes){
+            if (s == boughtItemDescriptionPane){
+                break;
+            }
+            i++;
+        }
+
+        boughtItemsPanes.remove(i);
+        boughtItems.remove(i);
+
+        this.WantToBuyItemsScrollPane.getChildren().remove(itemsNodes.get(i));
+        itemsNodes.remove(i);
+    }
 }

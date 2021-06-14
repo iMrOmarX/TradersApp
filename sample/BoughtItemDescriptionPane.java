@@ -1,6 +1,7 @@
 package sample;
 
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
@@ -15,11 +16,16 @@ public class BoughtItemDescriptionPane implements Initializable  {
     public TextField ItemPriceTextField;
     public TextField ItemQtyTextField;
 
+    public int qty ;
 
-    public BoughtItemDescriptionPane(Item currnetItem) {
+    public Button RemoveButton;
+
+    private Controller currentController;
+
+    public BoughtItemDescriptionPane(Item currnetItem , Controller currnetController) {
         super();
         this.currentItem = currnetItem;
-
+        this.currentController = currnetController;
 
     }
 
@@ -29,5 +35,31 @@ public class BoughtItemDescriptionPane implements Initializable  {
         ItemNameTextField.setText(currentItem.getName());
         ItemPriceTextField.setText(currentItem.getPrice() + "");
 
+
+    }
+
+    public Item getCurrentItem() {
+        if(ItemQtyTextField.getText().isBlank()) {
+            qty = 0 ;
+        }
+        else {
+            try {
+                qty = Integer.parseInt(ItemQtyTextField.getText());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+        this.currentItem.setQty(qty);
+
+        return currentItem;
+    }
+
+
+
+
+
+    public void removeItem() {
+        currentController.removeItem(this);
     }
 }
