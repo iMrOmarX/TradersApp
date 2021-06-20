@@ -20,7 +20,7 @@ public class BoughtItemDescriptionPane implements Initializable  {
 
     public Button RemoveButton;
 
-    private Controller currentController;
+    private final Controller currentController;
 
     public BoughtItemDescriptionPane(Item currnetItem , Controller currnetController) {
         super();
@@ -38,7 +38,7 @@ public class BoughtItemDescriptionPane implements Initializable  {
 
     }
 
-    public Item getCurrentItem() {
+    public void setQty() {
         if(ItemQtyTextField.getText().isBlank()) {
             qty = 0 ;
         }
@@ -51,6 +51,10 @@ public class BoughtItemDescriptionPane implements Initializable  {
 
         }
         this.currentItem.setQty(qty);
+    }
+
+    public Item getCurrentItem() {
+
 
         return currentItem;
     }

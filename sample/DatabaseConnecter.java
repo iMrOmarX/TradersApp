@@ -1,23 +1,79 @@
 package sample;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 
 public class DatabaseConnecter {
-    private String connectionURL = "jdbc:mysql://localhost:3306/traders" ;
-    private String userName = "root";
-    private String userPassword = "9yKZpv%PE3GH";
+    private final String connectionURL ;
+    private final String userName = "root";
+    private final String userPassword = "9yKZpv%PE3GH";
     private Connection conn;
     private Statement stmt;
 
-    public DatabaseConnecter() throws SQLException {
-        connectToDatabase();
+    private final String dbPath ;
+    public DatabaseConnecter() throws SQLException , IOException {
+
+        dbPath = System.getProperty("user.home") + "\\Documents\\TradersAppData\\traders.db";
+        System.out.println(dbPath);
+        connectionURL =  "jdbc:sqlite:/" + dbPath;
+
+
+        File dbFile;
+        dbFile = new File(dbPath);
+
+
+
+        if(!dbFile.exists()) {
+
+            //create new database
+            dbFile.getParentFile().mkdirs();
+            dbFile.createNewFile();
+            connectToDatabase();
+            createNewDatabase();
+
+        }
+        else {
+            connectToDatabase();
+        }
+
+
+    }
+
+    public void createNewDatabase () throws SQLException {
+        stmt.execute("""
+    create table traders (
+    	id int ,
+        name varchar(50),
+        phone_number varchar(20),
+        address varchar(30),
+        notes varchar(200),
+        primary key(id)
+    );
+""");
+
+
+        stmt.execute(""" 
+    create table item (
+    	id int ,
+        name varchar(50),
+        price float,
+        notes varchar(200),
+        trader_id int ,
+        primary key(id),
+        foreign key (trader_id) references traders(id)
+    );
+""");
+
     }
     public void connectToDatabase() throws SQLException {
         // Step 1: Construct a database 'Connection' object called 'conn'
-        conn = DriverManager.getConnection( connectionURL,
-                userName, userPassword);   // For MySQL only
+        conn = DriverManager.getConnection(connectionURL);
+
         stmt = conn.createStatement();
+
+        System.out.println(conn.isClosed());
     }
 
     public Trader getTraderById(int id)  throws SQLException {
@@ -47,6 +103,7 @@ public class DatabaseConnecter {
             names.add(name);
         }
 
+        System.out.println("name " );
         return names;
     }
 
@@ -151,11 +208,11 @@ public class DatabaseConnecter {
 
     public ArrayList<Item> getItems (String itemName ) throws SQLException{
 
-        //String strSelect ="SELECT id(item) , name(item), price(item) , notes(item) , name(traders) FROM item  "+
+        //String strSelect ="SELECT id(item) , name(item), price(item) , notes(item) , name(traders.db) FROM item  "+
          //       ((itemName.isBlank())? "" : "WHERE name LIKE " +  "'%" + itemName + "%'");
 
 
-        String strSelect = "select item.* , traders.name as trader_name from item INNER JOIN traders on item.trader_id = traders.id " +
+        String strSelect = "select item.* , traders.name as trader_name, traders.phone_number as trader_phone_number from item INNER JOIN traders on item.trader_id = traders.id " +
                 ((itemName.isBlank())? "" : "WHERE item.name LIKE " +  "'%" + itemName + "%'");
 
         ResultSet rset = stmt.executeQuery(strSelect);
@@ -172,12 +229,14 @@ public class DatabaseConnecter {
             String notes = rset.getString("notes");
 
             int trader_id = rset.getInt("trader_id");
-
+            String phoneNumber= rset.getString("trader_phone_number");
 
             Item newItem = new Item(id,  price , trader_id , name , notes) ;
             String trader_name = rset.getString("trader_name");
 
             newItem.setTraderName(trader_name);
+            newItem.setPhoneNumber(phoneNumber);
+
             items.add(newItem);
 
         }

@@ -48,7 +48,7 @@ public class Controller  implements Initializable {
 
     public Button addNewTraderButton;
 
-    private Logger log = new Logger() ;
+    private final Logger log = new Logger() ;
     private DatabaseConnecter db;
 
 
@@ -74,6 +74,8 @@ public class Controller  implements Initializable {
     private ArrayList<Node> itemsNodes;
 
 
+    public Button BuyButton;
+
     @Override
     public void initialize(URL url , ResourceBundle rb) {
 
@@ -81,11 +83,14 @@ public class Controller  implements Initializable {
         try {
 
             db = new DatabaseConnecter();
+
             traders = db.getTradersByName("");
+
             currentWantedTraders = traders;
             tradersNames = db.getTradersNames();
-        } catch (SQLException e)  {
+        } catch (SQLException | IOException e)  {
             System.out.println(e.getCause());
+
         }
 
         TraderIdTextField.setText((tradersNames.size() + 1) + "");
@@ -114,10 +119,10 @@ public class Controller  implements Initializable {
 
                     try {
                         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/sample/traderDataScene.fxml"));
-                        Parent root1 = (Parent) fxmlLoader.load();
+                        Parent root1 = fxmlLoader.load();
                         Stage stage = new Stage();
 
-                        traderDataController =  fxmlLoader.<TraderDataPanelController>getController();
+                        traderDataController =  fxmlLoader.getController();
 
 
                         traderDataController.setCurrentTrader(currentWantedTraders.get(currentItemSelected));
@@ -168,10 +173,11 @@ public class Controller  implements Initializable {
         }
 
     }
-    public void showConfirmationAlert() {
+
+    public void showConfirmationAlert(String input) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("نجاح العملية");
-        alert.setHeaderText("لقد تم إدخال بيانات التاجر الجديد");
+        alert.setHeaderText(input);
 
 
         alert.showAndWait();
@@ -200,7 +206,7 @@ public class Controller  implements Initializable {
 
     public void addNewTrader() {
         try {
-            TextField nesscaryTextFields[] = {TraderIdTextField, TraderNameTextField, TraderPhoneNumberTextField};
+            TextField[] nesscaryTextFields = {TraderIdTextField, TraderNameTextField, TraderPhoneNumberTextField};
             for(TextField field : nesscaryTextFields) {
                 if(field.getText().isBlank()) {
                     throw new IncompleteInputData();
@@ -218,7 +224,7 @@ public class Controller  implements Initializable {
             resetAddTraderFields();
 
             showTradersOnList();
-            showConfirmationAlert();
+            showConfirmationAlert("لقد تم إدخال بيانات التاجر الجديد");
 
         } catch (Exception e) {
             // update
@@ -339,5 +345,32 @@ public class Controller  implements Initializable {
 
         this.WantToBuyItemsScrollPane.getChildren().remove(itemsNodes.get(i));
         itemsNodes.remove(i);
+    }
+
+
+    public void resetBoughtItems(){
+        boughtItemsPanes.clear();
+        boughtItems.clear();
+        this.WantToBuyItemsScrollPane.getChildren().clear();
+        itemsNodes.clear();
+    }
+
+    public void buyItems() {
+        for(BoughtItemDescriptionPane s : boughtItemsPanes) {
+            s.setQty();
+        }
+
+        PDFConverter pdfConverter = new PDFConverter();
+        try {
+            pdfConverter.printBill(boughtItems);
+            showConfirmationAlert("لقد تم عملية الشراء بنجاح");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        resetBoughtItems();
+
+
     }
 }

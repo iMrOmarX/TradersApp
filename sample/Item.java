@@ -6,6 +6,15 @@ public class Item {
     private String name= "" , notes= "";
     private String traderName;
     private int qty ;
+    private String phoneNumber ;
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     public String getTraderName() {
         return traderName;

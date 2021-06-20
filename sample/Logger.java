@@ -8,8 +8,8 @@ import java.io.IOException;
 
 public class Logger {
 
-    private Gson gson ;
-    private String folderName = "data";
+    private final Gson gson ;
+    private final String folderName = "data";
 
     public Logger() {
 
@@ -43,6 +43,8 @@ public class Logger {
         fs.close();
 
     }
+
+
 
 }
 

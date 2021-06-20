@@ -32,7 +32,7 @@ public class TraderDataPanelController implements Initializable {
     public TextArea AddProductNotesTextField;
     public Button AddProductButton;
 
-    private TextField[] TraderTextFields = {TraderNameTextField , TraderPhoneNumberTextField , TraderAddressTextField , TraderIdTextField};
+    private final TextField[] TraderTextFields = {TraderNameTextField , TraderPhoneNumberTextField , TraderAddressTextField , TraderIdTextField};
 
     private DatabaseConnecter db;
 
@@ -46,6 +46,8 @@ public class TraderDataPanelController implements Initializable {
     public TableColumn ItemNameColumn;
     public TableColumn ItemPriceColumn;
     public TableColumn ItemNotesColumn;
+
+
 
     public void setCurrentTrader(Trader currentTrader) {
         this.currentTrader = currentTrader;
@@ -112,7 +114,7 @@ public class TraderDataPanelController implements Initializable {
                 field.setText("");
             }
             AddProductNotesTextField.setText("");
-            AddProductIdTextField.setText("" + db.getNumberOfItems());
+            AddProductIdTextField.setText("" + (db.getNumberOfItems() +1));
         } catch (Exception e){
             throw e;
         }
@@ -136,4 +138,6 @@ public class TraderDataPanelController implements Initializable {
         }
 
     }
+
+
 }

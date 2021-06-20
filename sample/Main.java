@@ -19,7 +19,7 @@ public class Main extends Application {
         Parent root =  loader.load();
 
         //Now we have access to getController() through the instance... don't forget the type cast
-        Controller myController = (Controller)loader.getController();
+        Controller myController = loader.getController();
 
         primaryStage.setTitle("Trader App");
         primaryStage.setScene(new Scene(root, 1280, 720));

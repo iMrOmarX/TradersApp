@@ -66,13 +66,14 @@
                         <Button fx:id="SearchForProductButton" layoutX="644.0" layoutY="101.0" mnemonicParsing="false" onAction="#serachForItemByNameAndUpdate" prefHeight="38.0" prefWidth="91.0" text="البحث" />
                         <TextField fx:id="SearchForItemByNameTextField" layoutX="642.0" layoutY="56.0" onAction="#serachForItemByNameAndUpdate" prefHeight="34.0" prefWidth="410.0" />
                         <Label layoutX="1093.0" layoutY="64.0" prefHeight="6.0" prefWidth="141.0" text="البحث عن طريق اسم المنتج" />
-                        <ScrollPane layoutX="56.0" layoutY="64.0" prefHeight="426.0" prefWidth="462.0">
+                        <ScrollPane layoutX="56.0" layoutY="64.0" prefHeight="509.0" prefWidth="462.0">
                            <content>
                               <VBox fx:id="WantToBuyItemsScrollPane" />
                            </content>
                         </ScrollPane>
                         <TextField fx:id="SearchForItemByIdTextField" layoutX="885.0" layoutY="103.0" onAction="#serachForItemByNameAndUpdate" prefHeight="34.0" prefWidth="132.0" />
                         <Label layoutX="1039.0" layoutY="110.0" prefHeight="19.0" prefWidth="196.0" text="البحث عن طريق الرقم التسلسلي للمنتج" />
+                        <Button fx:id="BuyButton" layoutX="71.0" layoutY="616.0" mnemonicParsing="false" onAction="#buyItems" prefHeight="34.0" prefWidth="185.0" text="شراء" />
                      </children></AnchorPane>
               </content>
             </Tab>
